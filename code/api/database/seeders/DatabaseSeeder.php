@@ -2,39 +2,47 @@
 
 namespace Database\Seeders;
 
+use App\Models\Setting;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $settings = [
+            'coins_per_euro' => '10',
+            'platform_fee_percent' => '10',
+            'ranked_entry_fee' => '5',
+            'welcome_bonus' => '50',
+        ];
+        foreach ($settings as $key => $value) {
+            Setting::create(['key' => $key, 'value' => $value]);
+        }
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'nickname' => 'admin',
+            'type' => 'A',
         ]);
 
-        User::factory()->create([
-            'name' => 'Second User',
-            'email' => 'second@example.com',
-        ]);
+        $players = [
+            ['Test User', 'test@example.com', 'test', 100, 1000],
+            ['Second User', 'second@example.com', 'second', 100, 1000],
+            ['Player 1', 'player1@example.com', 'player1', 200, 1100],
+            ['Player 2', 'player2@example.com', 'player2', 200, 950],
+        ];
 
-        User::factory()->create([
-            'name' => 'Player 1',
-            'email' => 'player1@example.com',
-        ]);
-
-        User::factory()->create([
-            'name' => 'Player 2',
-            'email' => 'player2@example.com',
-        ]);
+        foreach ($players as [$name, $email, $nickname, $coins, $rank]) {
+            User::factory()->create([
+                'name' => $name,
+                'email' => $email,
+                'nickname' => $nickname,
+                'type' => 'P',
+                'coins_balance' => $coins,
+                'rank_points' => $rank,
+            ]);
+        }
     }
 }
